@@ -8,5 +8,12 @@ def mask_account_card(number: str) -> str:
     if len(number_digit) == 16:
         mask_card_number = get_mask_card_number(number_digit)
         return f'{number[0:-16]}{mask_card_number}'
+    elif len(number_digit) == 20:
+        mask_card_number = get_mask_account(number_digit)
+        return f'{number[0:-20]}{mask_card_number}'
+    else:
+        return 'У вас не карта, и не счёт!'
 
-print(mask_account_card('Visa Platinum 7000792289606361'))
+
+
+print(mask_account_card('Счферфе30135874305'))
