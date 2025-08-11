@@ -15,5 +15,10 @@ def mask_account_card(number: str) -> str:
         return 'У вас не карта, и не счёт!'
 
 
+def get_date(date_unformatted: str) -> str:
+    date_cut_list = date_unformatted[:10].split('-')
+    return ".".join([date_cut_list[1], date_cut_list[2], date_cut_list[0]])
 
-print(mask_account_card('Счферфе30135874305'))
+
+print(get_date("2024-03-11T02:26:18.671407"))
+
