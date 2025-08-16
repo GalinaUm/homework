@@ -1,6 +1,5 @@
 from .masks import get_mask_account, get_mask_card_number
 
-
 def mask_account_card(number: str) -> str:
     """Функция, которая создает маску номера или счета"""
     number_digit = ""
