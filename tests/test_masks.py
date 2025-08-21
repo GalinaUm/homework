@@ -16,6 +16,20 @@ def test_get_mask_card_number_wrong_length():
         get_mask_card_number(7000792289606361123)
 
 
+@pytest.fixture
+def number_account():
+    return 73654108430135874305
+
+
+@pytest.mark.parametrize("expected", ["**4305"])
+def test_get_mask_account(number_account, expected):
+    assert get_mask_account(number_account) == expected
+
+def test_get_mask_account_wrong_length():
+    with pytest.raises(ValueError):
+        get_mask_account(73654108430135874305123)
+
+
 
 
 
