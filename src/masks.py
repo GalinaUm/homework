@@ -1,5 +1,9 @@
 def get_mask_card_number(number_card: int) -> str:
     """Функция, которая превращает номер карты в маску номера карты"""
+
+    if len(str(number_card)) != 16:
+        raise ValueError('Неправильная длина номера')
+
     number_card_stroke = str(number_card)
     return f"{number_card_stroke[0:4]} {number_card_stroke[4:6]}** **** {number_card_stroke[12:]}"
 
