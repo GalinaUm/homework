@@ -8,8 +8,6 @@ def filter_by_state(list_not_filtered: list, state: str = "EXECUTED") -> list:
         for item in dict_item.values():
             if item == state:
                 list_filtered.append(dict_item)
-            else:
-                continue
     return list_filtered
 
 
