@@ -11,6 +11,7 @@ def number_card():
 def test_get_mask_card_number(number_card, expected):
     assert get_mask_card_number(number_card) == expected
 
+
 def test_get_mask_card_number_wrong_length():
     with pytest.raises(ValueError):
         get_mask_card_number(7000792289606361123)
