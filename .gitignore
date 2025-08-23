@@ -50,7 +50,7 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 cover/
-
+.htmlcov
 # Translations
 *.mo
 *.pot
@@ -201,4 +201,5 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+/htmlcov/
 /htmlcov/
