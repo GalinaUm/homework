@@ -36,7 +36,7 @@ def mask_account_card(number: str) -> str:
 def get_date(date_unformatted: str) -> str:
     """Функция, которая форматирует дату"""
     date_cut_list = date_unformatted[:10].split("-")
-    return ".".join([date_cut_list[1], date_cut_list[2], date_cut_list[0]])
+    return ".".join([date_cut_list[2], date_cut_list[1], date_cut_list[0]])
 
 
 print(mask_account_card("Maestro 1596837868705199"))
