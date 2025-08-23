@@ -4,8 +4,6 @@ from src.widget import mask_account_card, get_date
 from src.masks import get_mask_account, get_mask_card_number
 
 
-
-
 @pytest.mark.parametrize("account, expected", [("Maestro 1596837868705199", "Maestro 1596 83** **** 5199"),
                                               ("Счет 64686473678894779589", "Счет **9589"),
                                               ("MasterCard 7158300734726758", "MasterCard 7158 30** **** 6758"),
@@ -44,6 +42,11 @@ def test_mask_account_card_invalid_account_number_more():
                                             ('2018-10-14T08:21:33.419441', "14.10.2018")])
 def test_get_date(date, expected):
     assert get_date(date) == expected
+
+
+def test_get_date_empty():
+    with pytest.raises(ValueError):
+        get_date("")
 
 
 
