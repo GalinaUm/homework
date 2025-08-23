@@ -17,6 +17,12 @@ def test_get_mask_card_number_wrong_length():
         get_mask_card_number(7000792289606361123)
 
 
+@pytest.mark.parametrize("number_card, expected", [(6831982476737658, "6831 98** **** 7658"),
+                                                   (7000792289606361, "7000 79** **** 6361")])
+def test_get_mask_card_number_change(number_card: int, expected: str) -> None:
+    assert len(str(number_card)) + 3 == len(expected)
+
+
 @pytest.fixture
 def number_account():
     return 73654108430135874305
