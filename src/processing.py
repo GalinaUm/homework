@@ -3,6 +3,10 @@ from datetime import datetime
 
 def filter_by_state(list_not_filtered: list, state: str = "EXECUTED") -> list:
     """Функция, которая фильтрует списки словарей по нужному параметру"""
+
+    if not list_not_filtered:
+        raise ValueError('Пустой список')
+
     list_filtered = []
     for dict_item in list_not_filtered:
         for item in dict_item.values():
