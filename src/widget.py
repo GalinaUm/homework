@@ -1,8 +1,8 @@
 from src.masks import get_mask_account, get_mask_card_number
 
+
 def mask_account_card(number: str) -> str:
     """Функция, которая создает маску номера или счета"""
-
 
     number_digit = ""
 
@@ -13,13 +13,13 @@ def mask_account_card(number: str) -> str:
     number_digit_int = int(number_digit)
 
     if len(number_digit) < 16:
-        raise ValueError('Неверный номер карты или счета')
+        raise ValueError("Неверный номер карты или счета")
 
     if 16 < len(number_digit) < 20:
-        raise ValueError('Неверный номер карты или счета')
+        raise ValueError("Неверный номер карты или счета")
 
     if len(number_digit) > 20:
-        raise ValueError('Неверный номер карты или счета')
+        raise ValueError("Неверный номер карты или счета")
 
     if len(number_digit) == 16:
         mask_card_number = get_mask_card_number(number_digit_int)
