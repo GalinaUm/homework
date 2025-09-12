@@ -1,6 +1,9 @@
+import os
+from dotenv import load_dotenv
 import requests
 
-API_KEY ='vXUTgTijG2AmHpUzDl1r0iw7mzPZ4gW2'
+load_dotenv()
+API_KEY = os.getenv('API_KEY')
 
 
 def convert(transaction: dict) -> float:

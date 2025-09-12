@@ -12,4 +12,4 @@ def read_transactions(file_path: str) -> list[dict]:
             return []
         return data
 
-# print(read_transactions('../data/operations.json'))
+print(read_transactions('../data/operations.json'))
