@@ -3,6 +3,7 @@ import os
 
 
 def read_transactions(file_path: str) -> list[dict]:
+    """Читает транзакции из файла"""
     if not os.path.exists(file_path):
         return []
 

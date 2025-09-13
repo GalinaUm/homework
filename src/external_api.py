@@ -7,7 +7,7 @@ API_KEY = os.getenv('API_KEY')
 
 
 def convert(transaction: dict) -> float:
-
+    """Возвращает сумму, если она в рублях, и сначала конвертирует, если в другой валюте"""
     currency = transaction['operationAmount']['currency']['code']
     amount = transaction['operationAmount']['amount']
     if currency == 'RUB':
