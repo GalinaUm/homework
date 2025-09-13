@@ -1,8 +1,11 @@
 import os
+
 import pytest
+
 from src.decorators import log
 
 LOG_FILENAME = "test_log.txt"
+
 
 @pytest.fixture(autouse=True)
 def cleanup_log_file():
@@ -25,6 +28,7 @@ def test_log_success_console(capsys):
     assert result == 5
     assert "add ok" in captured.out
 
+
 def test_log_exception_console(capsys):
     @log()
     def fail():
@@ -36,6 +40,7 @@ def test_log_exception_console(capsys):
 
     assert "fail error: ValueError" in captured.out
     assert "Inputs:" in captured.out
+
 
 def test_log_success_file():
     @log(filename=LOG_FILENAME)

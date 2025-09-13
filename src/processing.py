@@ -21,8 +21,6 @@ def filter_by_state(list_not_filtered: list, state: str = "EXECUTED") -> list:
 # state_2 = "CANCELED"
 
 
-
-
 def sort_by_date(data_list: list, data_key: str = "date", descending=True) -> list:
     """Функция, которая принимает список словарей и необязательный параметр,
     задающий порядок сортировки (по умолчанию — убывание). Функция должна возвращать
@@ -32,5 +30,4 @@ def sort_by_date(data_list: list, data_key: str = "date", descending=True) -> li
 
 # Проверка работы кода
 if __name__ == "__main__":
-    pprint(filter_by_state(read_transactions('../data/operations.json')))
-
+    pprint(filter_by_state(read_transactions("../data/operations.json")))

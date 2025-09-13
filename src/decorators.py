@@ -1,7 +1,5 @@
-from typing import Callable, Optional, Any
 import functools
-
-from pyexpat.errors import messages
+from typing import Any, Callable, Optional
 
 
 def log(filename: Optional[str] = None) -> Callable:
@@ -16,6 +14,7 @@ def log(filename: Optional[str] = None) -> Callable:
         Принимает функцию, которую надо обернуть,
         возвращает обернутую функцию с логированием.
         """
+
         @functools.wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
             """
