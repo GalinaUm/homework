@@ -1,16 +1,16 @@
 import os
-
 import requests
+from typing import Optional
 from dotenv import load_dotenv
 
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
 
 
-def convert(transaction: dict) -> float:
+def convert(transaction: dict) -> Optional[float]:
     """Возвращает сумму, если она в рублях, и сначала конвертирует, если в другой валюте"""
     currency = transaction["operationAmount"]["currency"]["code"]
-    amount = transaction["operationAmount"]["amount"]
+    amount = float(transaction["operationAmount"]["amount"])
     if currency == "RUB":
         return amount
 
@@ -18,8 +18,17 @@ def convert(transaction: dict) -> float:
     headers = {"apikey": API_KEY}
     params = {"from": currency, "to": "RUB", "amount": amount}
 
-    response = requests.get(url, headers=headers, params=params)
-    return response.json()["result"]
+    # response = requests.get(url, headers=headers, params=params)
+    # return response.json()["result"]
+
+    try:
+        response = requests.get(url, headers=headers, params=params)
+        response.raise_for_status()
+        data = response.json()
+        return float(data.get("result"))
+    except (requests.RequestException, ValueError) as e:
+        print(f"Ошибка при конвертации валюты: {e}")
+        return None
 
 
 if __name__ == "__main__":
