@@ -1,4 +1,6 @@
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
+
+from src.external_api import convert
 
 
 @patch("src.external_api.os.getenv")
@@ -8,3 +10,4 @@ def test_api_key_loaded(mock_getenv):
 
     mock_getenv("API_KEY")
     mock_getenv.assert_called_with("API_KEY")
+
