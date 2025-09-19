@@ -47,6 +47,13 @@ _(Создает маску вашего кредитного счета)_
 _(Просмотр ваших операций по статусу)_
 - sort_by_date
 _(Сортирует их по дате)_
+
+### Модуль _read_file_
+- read_transactions_csv
+_(Считывает финансовые операции из CSV-файла.)_
+- read_transactions_excel
+_(Считывает финансовые операции из Excel-файла.)_
+
 ### Модуль _utils_
 - read_transactions
 
@@ -89,6 +96,7 @@ _(Создает расширенную маску вашей кредитной
 - __test_generators.py__ - проверка модуля _generators.py_.
 - __test_masks.py__ - проверка модуля _masks.py_.
 - __test_processing.py__ - проверка модуля _processing.py_.
+- __test_read_file.py__ - проверка модуля _read_file_.
 - __test_utils.py__ - проверка модуля _utils.py_.
 - __test_widget.py__ - проверка модуля _widget.py_.
 
