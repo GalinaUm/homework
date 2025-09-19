@@ -1,42 +1,61 @@
-import os
-import unittest
-from unittest.mock import patch, mock_open, MagicMock
-
-import pytest
-import requests
-import json
-
-from src.read_file import read_file_csv
+from unittest.mock import patch, MagicMock
+from src.read_file import read_transactions_csv, read_transactions_excel
 
 
-# @pytest.fixture()
-# def coll():
-#     return [{'amount': '16210',
-#              'currency_code': 'PEN',
-#              'currency_name': 'Sol',
-#              'date': '2023-09-05T11:30:32Z',
-#              'description': 'Перевод организации',
-#              'from': 'Счет 58803664561298323391',
-#              'id': '650703',
-#              'state': 'EXECUTED',
-#              'to': 'Счет 39745660563456619397'},
-#             {'amount': '29740',
-#              'currency_code': 'COP',
-#              'currency_name': 'Peso',
-#              'date': '2020-12-06T23:00:58Z',
-#              'description': 'Перевод с карты на карту',
-#              'from': 'Discover 3172601889670065',
-#              'id': '3598919',
-#              'state': 'EXECUTED',
-#              'to': 'Discover 0720428384694643'}]
-#
-# @pytest.fixture()
-# def test_read_file_csv(file_name, expected):
-#     file_name = '../data/test_transactions.csv'
-#     assert read_file_csv(file_name) == expected
+def test_read_transactions_csv():
+    mock_df = MagicMock()
+    mock_df.to_dict.return_value = [
+        {"date": "2024-01-01", "amount": 100, "description": "income"},
+        {"date": "2024-01-02", "amount": -50, "description": "expense"},
+    ]
+
+    with patch("pandas.read_csv", return_value=mock_df) as mock_read_csv:
+        result = read_transactions_csv("fake_path.csv")
+        mock_read_csv.assert_called_once_with("fake_path.csv")
+        mock_df.to_dict.assert_called_once_with(orient="records")
+
+    assert isinstance(result, list)
+    assert len(result) == 2
+    assert result[0]["amount"] == 100
+    assert result[1]["description"] == "expense"
 
 
-def test_read_file_csv_errors():
-    with pytest.raises(Exception) as exc_info:
-        read_file_csv('fghjfghadhg')
-        assert  exc_info == "Ошибочка вышла [Errno 2] No such file or directory: 'fghjfghadhg'"
+def test_read_transactions_excel():
+    mock_df = MagicMock()
+    mock_df.to_dict.return_value = [
+        {"date": "2024-01-01", "amount": 200, "description": "salary"},
+        {"date": "2024-01-02", "amount": -80, "description": "bill"},
+    ]
+
+    with patch("pandas.read_excel", return_value=mock_df) as mock_read_excel:
+        result = read_transactions_excel("fake_path.xlsx")
+        mock_read_excel.assert_called_once_with("fake_path.xlsx")
+        mock_df.to_dict.assert_called_once_with(orient="records")
+
+    assert isinstance(result, list)
+    assert len(result) == 2
+    assert result[0]["amount"] == 200
+    assert result[1]["description"] == "bill"
+
+    # import os
+    # import unittest
+    # from unittest.mock import patch, mock_open, MagicMock
+    #
+    # import pytest
+    # import requests
+    # import json
+
+    # from src.read_file import read_file_csv
+    #
+    #
+    #
+    #
+    # @pytest.fixture
+    # def test_read_file_csv(file_name, expected):
+    #     assert read_file_csv(file_name) == expected
+    #
+    #
+    # def test_read_file_csv_errors():
+    #     with pytest.raises(Exception) as exc_info:
+    #         read_file_csv('fghjfghadhg')
+    #         assert  exc_info == "Ошибочка вышла [Errno 2] No such file or directory: 'fghjfghadhg'"
