@@ -80,7 +80,6 @@ class TestReadTransactions(unittest.TestCase):
         """
         Альтернативный тест для случая, когда файл не существует.
         """
-        file_path = "../data/non_existent_operations.json"
 
         mock_os_exists.return_value = True
 

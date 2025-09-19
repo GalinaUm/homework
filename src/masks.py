@@ -1,4 +1,3 @@
-import datetime
 import logging
 
 logger = logging.getLogger("masks")
@@ -11,7 +10,6 @@ logger.addHandler(file_handler)
 
 def get_mask_card_number(number_card: int) -> str:
     """Функция, которая превращает номер карты в маску номера карты"""
-    today = datetime.datetime.today()
 
     logger.warning(f"Номер {number_card} неправильный")
     if len(str(number_card)) != 16:
