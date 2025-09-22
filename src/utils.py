@@ -90,7 +90,7 @@ def process_bank_operations(data: list[dict], categories:list='') -> dict:
         return my_list_after_count
 
 if __name__ == '__main__':
-    print(process_bank_operations(my_dict, ['Перевод с карты на счет', 'Перевод со счета на счет']))
+    pprint(process_bank_operations(my_dict))
 
 
 
