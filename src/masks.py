@@ -2,7 +2,7 @@ import logging
 
 logger = logging.getLogger("masks")
 logger.setLevel(logging.INFO)
-file_handler = logging.FileHandler("../logs/masks.log")
+file_handler = logging.FileHandler("F:/Galina/_python/_homework/logs/masks.log")
 file_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s: %(message)s")
 file_handler.setFormatter(file_formatter)
 logger.addHandler(file_handler)
@@ -34,4 +34,4 @@ def get_mask_account(number_account: int) -> str:
     return f"**{number_account_stroke[16:]}"
 
 
-print(get_mask_account(4562378546))
+print(get_mask_account(12345678912345678912))
