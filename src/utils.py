@@ -1,7 +1,12 @@
 import json
 import logging
 import os
+import re
+from pprint import pprint
 from typing import Any
+from collections import Counter, defaultdict
+
+from src.read_file import read_transactions_csv
 
 logger = logging.getLogger("utils")
 logger.setLevel(logging.INFO)
@@ -30,4 +35,74 @@ def read_transactions(file_path: str) -> None | list[Any] | list:
         print("Invalid JSON data.")
 
 
-print(read_transactions("../data/operations.json"))
+my_dict = read_transactions("../data/operations.json")
+
+
+
+def process_bank_search(data_dict: list[dict], description: str | None = "Перевод с карты на счет") -> list[
+    dict]:
+    """
+        Фильтрует список банковских операций, оставляя только те,
+        в описании которых содержится указанная строка поиска.
+        """
+    pattern = re.compile(re.escape(description), re.IGNORECASE)
+
+    result = []
+    for operation in data_dict:
+
+        desc = str(operation.get("description", ""))
+        if pattern.search(desc):
+            result.append(operation)
+    return result
+
+
+# pprint(process_bank_search(my_dict, "Перевод с карты на счет"))
+
+
+def process_bank_operations(data: list[dict], categories:list='') -> dict:
+    """
+    Принимает список словарей с данными о банковских операциях и список категорий операций,
+    возвращает словарь, в котором ключи — это названия категорий,
+    а значения — это количество операций в каждой категории.
+    """
+    if not categories:
+        my_list = []
+
+        for data_dict in data:
+            for key, val in data_dict.items():
+                if key == 'description':
+                    my_list.append(val)
+
+        my_list_after_count = Counter(my_list)
+
+        return my_list_after_count
+
+    else:
+        my_list = []
+
+        for data_dict in data:
+            for key, val in data_dict.items():
+                if key == 'description' and val in categories:
+                    my_list.append(val)
+
+        my_list_after_count = Counter(my_list)
+
+        return my_list_after_count
+
+if __name__ == '__main__':
+    print(process_bank_operations(my_dict, ['Перевод с карты на счет', 'Перевод со счета на счет']))
+
+
+
+
+
+
+
+
+    # result = {c: 0 for c in categories}
+    # for tran in data:
+    #     desc = tran['description']
+    #     result[desc] += 1
+    # return result
+
+

@@ -51,30 +51,31 @@ try:
 except FileNotFoundError:
     print(f"Файл Excel не найден по пути: {excel_path}")
 
-    # import csv
-    # from pprint import pprint
-    # from typing import Any, Dict, List
-    #
-    #
-    # import pandas as pd
-    #
-    # def read_file_csv(file_name:str) -> list[Any] | None:
-    #     """Функция для считывания финансовых операций. Принимает на вход файл.csv, возвращает список
-    #         словарей"""
-    #
-    #     try:
-    #         with open(file_name, mode='r', encoding='utf-8') as file_csv:
-    #             reader = csv.DictReader(file_csv, delimiter=';')
-    #             result_dict = []
-    #             for row in reader:
-    #                 result_dict.append(row)
-    #             return result_dict
-    #     except Exception as e:
-    #         print(f'Ошибочка вышла {e}')
-    #         return None
-    #     except FileNotFoundError:
-    #         print(f"Ошибка: Файл '{file_name}' не найден.")
-    #         return None
+# import csv
+# from pprint import pprint
+# from typing import Any, Dict, List
+#
+#
+# import pandas as pd
+#
+# def read_file_csv(file_name:str) -> list[Any] | None:
+#     """Функция для считывания финансовых операций. Принимает на вход файл.csv, возвращает список
+#         словарей"""
+#
+#     try:
+#         with open(file_name, mode='r', encoding='utf-8') as file_csv:
+#             reader = csv.DictReader(file_csv, delimiter=';')
+#             result_dict = []
+#             for row in reader:
+#                 result_dict.append(row)
+#             return result_dict
+#     except FileNotFoundError:
+#         print(f"Ошибка: Файл '{file_name}' не найден.")
+#         raise FileNotFoundError
+#     except Exception as e:
+#         print(f'Ошибочка вышла {e}')
+#         raise e
+
     #
     #
     #

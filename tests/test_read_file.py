@@ -38,25 +38,26 @@ def test_read_transactions_excel():
     assert result[0]["amount"] == 200
     assert result[1]["description"] == "bill"
 
-    # import os
-    # import unittest
-    # from unittest.mock import patch, mock_open, MagicMock
-    #
-    # import pytest
-    # import requests
-    # import json
+# import os
+# import unittest
+# from unittest.mock import patch, mock_open, MagicMock
+#
+# import pytest
+# import requests
+# import json
 
-    # from src.read_file import read_file_csv
-    #
-    #
-    #
-    #
-    # @pytest.fixture
-    # def test_read_file_csv(file_name, expected):
-    #     assert read_file_csv(file_name) == expected
-    #
-    #
-    # def test_read_file_csv_errors():
-    #     with pytest.raises(Exception) as exc_info:
-    #         read_file_csv('fghjfghadhg')
-    #         assert  exc_info == "Ошибочка вышла [Errno 2] No such file or directory: 'fghjfghadhg'"
+# from src.read_file import read_file_csv
+
+
+
+
+
+# def test_read_file_csv(coll):
+#     file_name, expected = coll
+#     assert read_file_csv(file_name) == expected
+#
+#
+# def test_read_file_csv_errors():
+#     with pytest.raises(FileNotFoundError) as exc_info:
+#         read_file_csv('fghjfghadhg')
+
