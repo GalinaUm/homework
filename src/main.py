@@ -1,0 +1,166 @@
+from pyexpat.errors import messages
+
+from src.generators import filter_by_currency
+from src.masks import get_mask_account, get_mask_card_number
+from src.processing import filter_by_state, sort_by_date
+from src.read_file import read_transactions_csv, read_transactions_excel
+from src.utils import process_bank_search, read_transactions
+from src.widget import get_date, mask_account_card
+
+list_data_filepath = {
+    1: "../data/operations.json",
+    2: "../data/transactions.csv",
+    3: "../data/transactions_excel.xlsx",
+}
+
+
+def get_transaction_path() -> str:
+    """
+    Выбор типа транзакции
+    """
+    while True:
+        messages = "Введите 1-3"
+        try:
+            print(messages)
+            user_choice = int(input())
+            if user_choice in list_data_filepath:
+                file_path = str(list_data_filepath.get(user_choice))
+                return file_path
+        except ValueError:
+            continue
+
+
+def get_transaction_data(file_path: str, file_type: str) -> list[dict]:
+    """Выбор файла"""
+    if file_type == "json":
+        return read_transactions(file_path)
+    if file_type == "csv":
+        return read_transactions_csv(file_path)
+    if file_type == "xlsx":
+        return read_transactions_excel(file_path)
+    return []
+
+
+def state_approve() -> str:
+    """
+    Функция для проверки корректности ввода статуса
+    """
+    state_list = ["EXECUTED", "CANCELED", "PENDING"]
+
+    while True:
+        messages = "Доступные для фильтровки статусы: EXECUTED, CANCELED, PENDING"
+        print(messages)
+        user_choice = input()
+        if user_choice.upper() in state_list:
+            current_state = user_choice.upper()
+            return current_state
+        else:
+            print(f'Статус операции "{user_choice}" недоступен')
+
+
+def yes_or_not_approve(question: str) -> bool:
+    """
+    Функция для проверки корректности ответа на вопросы типа Да/Нет
+    """
+    messages = question
+    while True:
+        print(messages)
+        user_message = input()
+        if user_message.upper() == "ДА":
+            return True
+        if user_message.upper() == "НЕТ":
+            return False
+        else:
+            print(f'Ваш ответ "{user_message}" некорректен')
+
+
+def is_reverse() -> bool:
+    """
+    Функция для проверки сортировки по убыванию или возрастанию
+    """
+    messages = 'Отсортировать по возрастанию или по убыванию? Введите "УБЫВ" или "ВОЗВРА"'
+    print(messages)
+    while True:
+        user_message = input()
+        if "УБЫВ" in user_message.upper():
+            return True
+        if "ВОЗВРА" in user_message.upper():
+            return False
+        else:
+            print(f'Ваш ответ "{user_message}" некорректен')
+            print("Введите по возрастанию/по убыванию")
+
+
+def response_layout(operation: dict):
+    """
+    Функция для компановки ответа
+    """
+    date = get_date(operation.get("date"))
+    description = operation.get("description")
+
+    op_amount = operation.get("operationAmount")
+    amount = op_amount["amount"]
+    currency = op_amount.get("currency")
+    name = currency["name"]
+
+    if str(operation.get("from"[0:4])).lower() == "счет":
+        from_ = mask_account_card(str(operation.get("from")))
+    else:
+        from_ = mask_account_card(str(operation.get("from")))
+
+    if str(operation.get("to"[0:4])).lower() == "счет":
+        to = mask_account_card(str(operation.get("to")))
+    else:
+        to = mask_account_card(str(operation.get("to")))
+
+    print(f"{date} {description}")
+    print(f"{from_} -> {to}")
+    print(f"Сумма: {amount} {name}")
+
+
+def main():
+    """
+    Функция которая отвечает за основную логику проекта и связывает функциональности между собой.
+    """
+    print("Добро пожаловать!")
+    print(
+        """Выберите необходимый пункт меню:
+                    1. Получить информацию о транзакциях из JSON-файла
+                    2. Получить информацию о транзакциях из CSV-файла
+                    3. Получить информацию о транзакциях из XLSX-файла"""
+    )
+
+    # Получаем путь файла и его тип
+    transaction_path = get_transaction_path()
+    transaction_file_type = transaction_path.rsplit(".", 1)[-1]
+
+    print(f"Для обработки выбран {transaction_file_type} файл")
+
+    data = get_transaction_data(transaction_path, transaction_file_type)
+
+    print("Введите статус, по которому необходимо выполнить фильтрацию.")
+
+    state = state_approve()
+    print(f'Операции отфильтрованы по статусу "{state}"')
+
+    data = filter_by_state(data, state)
+
+    if yes_or_not_approve("Отсортировать операции по дате? Да/Нет"):
+        revers_date = is_reverse()
+        data = sort_by_date(data, revers_date)
+    if yes_or_not_approve("Выводить только рублевые транзакции? Да/Нет"):
+        iterator_result = filter_by_currency(data, "RUB")
+        data = list(iterator_result)
+    if yes_or_not_approve("Отфильтровать список транзакций по определенному слову в описании? Да/Нет"):
+        print("Введите слово:")
+        user_input = input()
+        data = process_bank_search(data, user_input)
+
+    print("Распечатываю итоговый список транзакций...")
+    if len(data) > 0:
+        print(f"Всего банковских операций в выборке: {len(data)}")
+        for operation in data:
+            response_layout(operation)
+
+
+main()

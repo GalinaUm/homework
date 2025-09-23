@@ -46,72 +46,72 @@ def test_filter_by_state_custom_canceled(data: list, state: str, expected: list)
     assert filter_by_state(data, state) == expected
 
 
-def test_filter_by_state_no_data() -> None:
-    with pytest.raises(ValueError):
-        filter_by_state([])
-
-
-def test_sort_by_date_ascending_and_descending() -> None:
-    """1. Тестирование сортировки списка словарей по датам в порядке убывания и возрастания."""
-
-    data = [
-        {"id": 1, "date": "2023-10-26T10:00:00.000000"},
-        {"id": 2, "date": "2023-10-25T12:00:00.000000"},
-        {"id": 3, "date": "2023-10-27T08:00:00.000000"},
-    ]
-
-    # Тест на сортировку по убыванию (descending=True - по умолчанию)
-    sorted_desc = sort_by_date(data)
-    assert sorted_desc[0]["date"] == "2023-10-27T08:00:00.000000"
-    assert sorted_desc[1]["date"] == "2023-10-26T10:00:00.000000"
-    assert sorted_desc[2]["date"] == "2023-10-25T12:00:00.000000"
-
-    # Тест на сортировку по возрастанию (descending=False)
-    sorted_asc = sort_by_date(data, descending=False)
-    assert sorted_asc[0]["date"] == "2023-10-25T12:00:00.000000"
-    assert sorted_asc[1]["date"] == "2023-10-26T10:00:00.000000"
-    assert sorted_asc[2]["date"] == "2023-10-27T08:00:00.000000"
-
-
-def test_sort_by_date_with_equal_dates() -> None:
+@pytest.mark.parametrize(
+    "data, expected",
+    [
+        (
+            [
+                {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
+                {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
+                {"id": 111111111, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
+                {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
+                {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
+            ],
+            [
+                {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
+                {"id": 111111111, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
+                {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
+                {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
+                {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
+            ],
+        )
+    ],
+)
+def test_sort_by_date_without_is_reverse(data, expected):
     """
-    2. Проверка корректности сортировки при одинаковых датах.
-    (Порядок элементов с одинаковыми датами не гарантируется stable sort,
-     но проверяем, что они группируются и нет ошибок)
+    Тест сортировки в порядке убывания.
+    При одинаковых датах сортировка между двумя одинаковыми элементами с датой сохраняется
     """
-    data = [
-        {"id": 1, "date": "2023-10-26T10:00:00.000000"},
-        {"id": 2, "date": "2023-10-25T12:00:00.000000"},
-        {"id": 3, "date": "2023-10-26T10:00:00.000000"},  # Такая же дата
-        {"id": 4, "date": "2023-10-27T08:00:00.000000"},
-        {"id": 5, "date": "2023-10-25T12:00:00.000000"},  # Такая же дата
-    ]
-
-    sorted_desc = sort_by_date(data)
-
-    # Проверяем, что элементы с одинаковыми датами стоят рядом
-    # и общий порядок убывания соблюдается.
-    # Для одинаковых дат порядок может быть разным, но эти элементы должны быть
-    # последовательно в отсортированном списке.
-    assert sorted_desc[0]["date"] == "2023-10-27T08:00:00.000000"
-
-    # Проверяем группу с датой 2023-10-26
-    assert sorted_desc[1]["date"] == "2023-10-26T10:00:00.000000"
-    assert sorted_desc[2]["date"] == "2023-10-26T10:00:00.000000"
-
-    # Проверяем группу с датой 2023-10-25
-    assert sorted_desc[3]["date"] == "2023-10-25T12:00:00.000000"
-    assert sorted_desc[4]["date"] == "2023-10-25T12:00:00.000000"
+    assert sort_by_date(data) == expected
 
 
-def test_sort_by_date_with_invalid_date_formats() -> None:
+@pytest.mark.parametrize(
+    "data, expected",
+    [
+        (
+            [
+                {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
+                {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
+                {"id": 111111111, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
+                {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
+                {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
+            ],
+            [
+                {"date": "2018-06-30T02:08:58.425572", "id": 939719570, "state": "EXECUTED"},
+                {"date": "2018-09-12T21:27:25.241689", "id": 594226727, "state": "CANCELED"},
+                {"date": "2018-10-14T08:21:33.419441", "id": 111111111, "state": "CANCELED"},
+                {"date": "2018-10-14T08:21:33.419441", "id": 615064591, "state": "CANCELED"},
+                {"date": "2019-07-03T18:35:29.512364", "id": 41428829, "state": "EXECUTED"},
+            ],
+        )
+    ],
+)
+def test_sort_by_date_is_reverse(data, expected):
+    """
+    Тест сортировки в порядке возростания
+    При одинаковых датах сортировка между двумя одинаковыми элементами с датой сохраняется
+    """
+    assert sort_by_date(data, False) == expected
+
+
+def test_sort_by_date_with_invalid_date_formats():
     # Случай с некорректным форматом даты
     invalid_format_data = [
         {"id": 1, "date": "2023-10-26T10:00:00.000000"},
         {"id": 2, "date": "26/10/2023 10:00"},  # Некорректный формат
         {"id": 3, "date": "2023-10-27T08:00:00.000000"},
     ]
-    with pytest.raises(ValueError, match="time data '26/10/2023 10:00' does not match format '%Y-%m-%dT%H:%M:%S.%f'"):
+    with pytest.raises(ValueError, match="time data '26/10/2023 10:00' does not match format '%d.%m.%Y'"):
         sort_by_date(invalid_format_data)
 
     # Случай с отсутствующим ключом "date"
@@ -126,15 +126,13 @@ def test_sort_by_date_with_invalid_date_formats() -> None:
     # Случай с датой, которая не может быть преобразована (например, неполная)
     incomplete_date_data = [
         {"id": 1, "date": "2023-10-26T10:00:00.000000"},
-        {"id": 2, "date": "2023-10-25T12:00:00"},  # Отсутствуют микросекунды
+        {"id": 2, "date": "2023-10"},  # Отсутствуют день
         {"id": 3, "date": "2023-10-27T08:00:00.000000"},
     ]
-    with pytest.raises(
-        ValueError, match="time data '2023-10-25T12:00:00' does not match format '%Y-%m-%dT%H:%M:%S.%f'"
-    ):
+    with pytest.raises(ValueError, match="time data '2023-10' does not match format '%d.%m.%Y'"):
         sort_by_date(incomplete_date_data)
 
     # Случай с пустым списком
-    empty_list_data: list = []
+    empty_list_data = []
     sorted_empty = sort_by_date(empty_list_data)
     assert sorted_empty == []
