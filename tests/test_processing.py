@@ -17,11 +17,11 @@ def data() -> list:
     "state, expected",
     [
         (
-                "EXECUTED",
-                [
-                    {"id": 1, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
-                    {"id": 2, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
-                ],
+            "EXECUTED",
+            [
+                {"id": 1, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
+                {"id": 2, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
+            ],
         ),
     ],
 )
@@ -33,11 +33,11 @@ def test_filter_by_state(data: list, state: str, expected: list) -> None:
     "state, expected",
     [
         (
-                "CANCELED",
-                [
-                    {"id": 3, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
-                    {"id": 4, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
-                ],
+            "CANCELED",
+            [
+                {"id": 3, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
+                {"id": 4, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
+            ],
         ),
     ],
 )
@@ -47,20 +47,26 @@ def test_filter_by_state_custom_canceled(data: list, state: str, expected: list)
 
 
 @pytest.mark.parametrize(
-    "data, expected", [([
-                            {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
-                            {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
-                            {"id": 111111111, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
-                            {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
-                            {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"}
-                        ],
-                        [
-                            {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
-                            {"id": 111111111, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
-                            {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
-                            {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
-                            {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"}]
-    )])
+    "data, expected",
+    [
+        (
+            [
+                {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
+                {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
+                {"id": 111111111, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
+                {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
+                {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
+            ],
+            [
+                {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
+                {"id": 111111111, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
+                {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
+                {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
+                {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
+            ],
+        )
+    ],
+)
 def test_sort_by_date_without_is_reverse(data, expected):
     """
     Тест сортировки в порядке убывания.
@@ -70,20 +76,25 @@ def test_sort_by_date_without_is_reverse(data, expected):
 
 
 @pytest.mark.parametrize(
-    "data, expected", [([
-                            {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
-                            {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
-                            {"id": 111111111, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
-                            {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
-                            {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"}
-                        ],
-                        [
-                            {'date': '2018-06-30T02:08:58.425572', 'id': 939719570, 'state': 'EXECUTED'},
-                            {'date': '2018-09-12T21:27:25.241689', 'id': 594226727, 'state': 'CANCELED'},
-                            {'date': '2018-10-14T08:21:33.419441', 'id': 111111111, 'state': 'CANCELED'},
-                            {'date': '2018-10-14T08:21:33.419441', 'id': 615064591, 'state': 'CANCELED'},
-                            {'date': '2019-07-03T18:35:29.512364', 'id': 41428829, 'state': 'EXECUTED'}]
-    )]
+    "data, expected",
+    [
+        (
+            [
+                {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
+                {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
+                {"id": 111111111, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
+                {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
+                {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
+            ],
+            [
+                {"date": "2018-06-30T02:08:58.425572", "id": 939719570, "state": "EXECUTED"},
+                {"date": "2018-09-12T21:27:25.241689", "id": 594226727, "state": "CANCELED"},
+                {"date": "2018-10-14T08:21:33.419441", "id": 111111111, "state": "CANCELED"},
+                {"date": "2018-10-14T08:21:33.419441", "id": 615064591, "state": "CANCELED"},
+                {"date": "2019-07-03T18:35:29.512364", "id": 41428829, "state": "EXECUTED"},
+            ],
+        )
+    ],
 )
 def test_sort_by_date_is_reverse(data, expected):
     """
@@ -118,9 +129,7 @@ def test_sort_by_date_with_invalid_date_formats():
         {"id": 2, "date": "2023-10"},  # Отсутствуют день
         {"id": 3, "date": "2023-10-27T08:00:00.000000"},
     ]
-    with pytest.raises(
-            ValueError, match="time data '2023-10' does not match format '%d.%m.%Y'"
-    ):
+    with pytest.raises(ValueError, match="time data '2023-10' does not match format '%d.%m.%Y'"):
         sort_by_date(incomplete_date_data)
 
     # Случай с пустым списком

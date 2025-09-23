@@ -1,17 +1,17 @@
-
 from pyexpat.errors import messages
 
-from src.processing import filter_by_state, sort_by_date
-from src.utils import process_bank_search
 from src.generators import filter_by_currency
+from src.masks import get_mask_account, get_mask_card_number
+from src.processing import filter_by_state, sort_by_date
 from src.read_file import read_transactions_csv, read_transactions_excel
-from src.utils import read_transactions
-from src.widget import get_date
+from src.utils import process_bank_search, read_transactions
+from src.widget import get_date, mask_account_card
 
-list_data_filepath = {1: "../data/operations.json",
-                      2: "../data/transactions.csv",
-                      3: "../data/transactions_excel.xlsx"}
-
+list_data_filepath = {
+    1: "../data/operations.json",
+    2: "../data/transactions.csv",
+    3: "../data/transactions_excel.xlsx",
+}
 
 
 def get_transaction_path() -> str:
@@ -30,7 +30,6 @@ def get_transaction_path() -> str:
             continue
 
 
-
 def get_transaction_data(file_path: str, file_type: str) -> list[dict]:
     """Выбор файла"""
     if file_type == "json":
@@ -46,7 +45,7 @@ def state_approve() -> str:
     """
     Функция для проверки корректности ввода статуса
     """
-    state_list = ["EXECUTED", "CANCELED","PENDING"]
+    state_list = ["EXECUTED", "CANCELED", "PENDING"]
 
     while True:
         messages = "Доступные для фильтровки статусы: EXECUTED, CANCELED, PENDING"
@@ -56,10 +55,10 @@ def state_approve() -> str:
             current_state = user_choice.upper()
             return current_state
         else:
-            print(f"Статус операции \"{user_choice}\" недоступен")
+            print(f'Статус операции "{user_choice}" недоступен')
 
 
-def yes_or_not_approve(question:str) -> bool:
+def yes_or_not_approve(question: str) -> bool:
     """
     Функция для проверки корректности ответа на вопросы типа Да/Нет
     """
@@ -72,13 +71,14 @@ def yes_or_not_approve(question:str) -> bool:
         if user_message.upper() == "НЕТ":
             return False
         else:
-            print(f"Ваш ответ \"{user_message}\" некорректен")
+            print(f'Ваш ответ "{user_message}" некорректен')
 
-def is_reverse()->bool:
+
+def is_reverse() -> bool:
     """
     Функция для проверки сортировки по убыванию или возрастанию
     """
-    messages = "Отсортировать по возрастанию или по убыванию? Введите \"УБЫВ\" или \"ВОЗВРА\""
+    messages = 'Отсортировать по возрастанию или по убыванию? Введите "УБЫВ" или "ВОЗВРА"'
     print(messages)
     while True:
         user_message = input()
@@ -87,17 +87,35 @@ def is_reverse()->bool:
         if "ВОЗВРА" in user_message.upper():
             return False
         else:
-            print(f"Ваш ответ \"{user_message}\" некорректен")
+            print(f'Ваш ответ "{user_message}" некорректен')
             print("Введите по возрастанию/по убыванию")
 
 
-def response_layout(operation:dict):
+def response_layout(operation: dict):
     """
     Функция для компановки ответа
     """
     date = get_date(operation.get("date"))
     description = operation.get("description")
+
+    op_amount = operation.get("operationAmount")
+    amount = op_amount["amount"]
+    currency = op_amount.get("currency")
+    name = currency["name"]
+
+    if str(operation.get("from"[0:4])).lower() == "счет":
+        from_ = mask_account_card(str(operation.get("from")))
+    else:
+        from_ = mask_account_card(str(operation.get("from")))
+
+    if str(operation.get("to"[0:4])).lower() == "счет":
+        to = mask_account_card(str(operation.get("to")))
+    else:
+        to = mask_account_card(str(operation.get("to")))
+
     print(f"{date} {description}")
+    print(f"{from_} -> {to}")
+    print(f"Сумма: {amount} {name}")
 
 
 def main():
@@ -105,14 +123,16 @@ def main():
     Функция которая отвечает за основную логику проекта и связывает функциональности между собой.
     """
     print("Добро пожаловать!")
-    print("""Выберите необходимый пункт меню:
+    print(
+        """Выберите необходимый пункт меню:
                     1. Получить информацию о транзакциях из JSON-файла
                     2. Получить информацию о транзакциях из CSV-файла
-                    3. Получить информацию о транзакциях из XLSX-файла""")
+                    3. Получить информацию о транзакциях из XLSX-файла"""
+    )
 
-    #Получаем путь файла и его тип
+    # Получаем путь файла и его тип
     transaction_path = get_transaction_path()
-    transaction_file_type = transaction_path.rsplit('.', 1)[-1]
+    transaction_file_type = transaction_path.rsplit(".", 1)[-1]
 
     print(f"Для обработки выбран {transaction_file_type} файл")
 
@@ -121,7 +141,7 @@ def main():
     print("Введите статус, по которому необходимо выполнить фильтрацию.")
 
     state = state_approve()
-    print(f"Операции отфильтрованы по статусу \"{state}\"")
+    print(f'Операции отфильтрованы по статусу "{state}"')
 
     data = filter_by_state(data, state)
 
@@ -143,7 +163,4 @@ def main():
             response_layout(operation)
 
 
-
-print(main())
-
-
+main()

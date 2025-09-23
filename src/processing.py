@@ -22,26 +22,26 @@ def filter_by_state(list_not_filtered: list, state: str = "EXECUTED") -> list:
 # state_2 = "CANCELED"
 
 
-
 def sort_by_date(data: list[dict], is_reverse: bool = True) -> list[dict]:
     """
     Сортирует список словарей по значению ключа 'date'
     """
     sorted_by_date_data = sorted(
-        data,
-        key=lambda item: datetime.strptime(
-            get_date(item["date"].split('T')[0]), "%d.%m.%Y"
-        ),reverse=is_reverse)
+        data, key=lambda item: datetime.strptime(get_date(item["date"].split("T")[0]), "%d.%m.%Y"), reverse=is_reverse
+    )
     return sorted_by_date_data
 
 
 # Проверка работы кода
 if __name__ == "__main__":
-    pprint(sort_by_date([
-        {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
-            {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
-            {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
-            {"id": 111111111, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
-
-            {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
-        ]))
+    pprint(
+        sort_by_date(
+            [
+                {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
+                {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
+                {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
+                {"id": 111111111, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
+                {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
+            ]
+        )
+    )

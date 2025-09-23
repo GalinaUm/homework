@@ -2,9 +2,9 @@ import json
 import logging
 import os
 import re
+from collections import Counter, defaultdict
 from pprint import pprint
 from typing import Any
-from collections import Counter, defaultdict
 
 from src.read_file import read_transactions_csv
 
@@ -38,13 +38,11 @@ def read_transactions(file_path: str) -> None | list[Any] | list:
 my_dict = read_transactions("../data/operations.json")
 
 
-
-def process_bank_search(data_dict: list[dict], description: str | None = "Перевод с карты на счет") -> list[
-    dict]:
+def process_bank_search(data_dict: list[dict], description: str | None = "Перевод с карты на счет") -> list[dict]:
     """
-        Фильтрует список банковских операций, оставляя только те,
-        в описании которых содержится указанная строка поиска.
-        """
+    Фильтрует список банковских операций, оставляя только те,
+    в описании которых содержится указанная строка поиска.
+    """
     pattern = re.compile(re.escape(description), re.IGNORECASE)
 
     result = []
@@ -59,7 +57,7 @@ def process_bank_search(data_dict: list[dict], description: str | None = "Пер
 # pprint(process_bank_search(my_dict, "Перевод с карты на счет"))
 
 
-def process_bank_operations(data: list[dict], categories:list='') -> dict:
+def process_bank_operations(data: list[dict], categories: list = "") -> dict:
     """
     Принимает список словарей с данными о банковских операциях и список категорий операций,
     возвращает словарь, в котором ключи — это названия категорий,
@@ -70,7 +68,7 @@ def process_bank_operations(data: list[dict], categories:list='') -> dict:
 
         for data_dict in data:
             for key, val in data_dict.items():
-                if key == 'description':
+                if key == "description":
                     my_list.append(val)
 
         my_list_after_count = Counter(my_list)
@@ -82,27 +80,19 @@ def process_bank_operations(data: list[dict], categories:list='') -> dict:
 
         for data_dict in data:
             for key, val in data_dict.items():
-                if key == 'description' and val in categories:
+                if key == "description" and val in categories:
                     my_list.append(val)
 
         my_list_after_count = Counter(my_list)
 
         return my_list_after_count
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     pprint(process_bank_operations(my_dict))
-
-
-
-
-
-
-
 
     # result = {c: 0 for c in categories}
     # for tran in data:
     #     desc = tran['description']
     #     result[desc] += 1
     # return result
-
-
