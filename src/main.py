@@ -32,6 +32,7 @@ def get_transaction_path() -> str:
 
 
 def get_transaction_data(file_path: str, file_type: str) -> list[dict]:
+    """Выбор файла"""
     if file_type == "json":
         return read_transactions(file_path)
     if file_type == "csv":
@@ -146,21 +147,3 @@ def main():
 print(main())
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-main()
