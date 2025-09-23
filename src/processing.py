@@ -2,6 +2,7 @@ from datetime import datetime
 from pprint import pprint
 
 from src.utils import read_transactions
+from src.widget import get_date
 
 
 def filter_by_state(list_not_filtered: list, state: str = "EXECUTED") -> list:
@@ -21,13 +22,26 @@ def filter_by_state(list_not_filtered: list, state: str = "EXECUTED") -> list:
 # state_2 = "CANCELED"
 
 
-def sort_by_date(data_list: list, data_key: str = "date", descending=True) -> list:
-    """Функция, которая принимает список словарей и необязательный параметр,
-    задающий порядок сортировки (по умолчанию — убывание). Функция должна возвращать
-     новый список, отсортированный по дате(date)."""
-    return sorted(data_list, key=lambda x: datetime.strptime(x[data_key], "%Y-%m-%dT%H:%M:%S.%f"), reverse=descending)
+
+def sort_by_date(data: list[dict], is_reverse: bool = True) -> list[dict]:
+    """
+    Сортирует список словарей по значению ключа 'date'
+    """
+    sorted_by_date_data = sorted(
+        data,
+        key=lambda item: datetime.strptime(
+            get_date(item["date"].split('T')[0]), "%d.%m.%Y"
+        ),reverse=is_reverse)
+    return sorted_by_date_data
 
 
 # Проверка работы кода
 if __name__ == "__main__":
-    pprint(filter_by_state(read_transactions("../data/operations.json")))
+    pprint(sort_by_date([
+        {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
+            {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
+            {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
+            {"id": 111111111, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
+
+            {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
+        ]))

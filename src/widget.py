@@ -1,4 +1,5 @@
 from src.masks import get_mask_account, get_mask_card_number
+from datetime import datetime
 
 
 def mask_account_card(number: str) -> str:
@@ -33,14 +34,24 @@ def mask_account_card(number: str) -> str:
         return "У вас не карта, и не счёт!"
 
 
-def get_date(date_unformatted: str) -> str:
-    """Функция, которая форматирует дату"""
-
-    if len(date_unformatted) == 0:
-        raise ValueError("Дата не может быть пустой!")
-
-    date_cut_list = date_unformatted[:10].split("-")
-    return ".".join([date_cut_list[2], date_cut_list[1], date_cut_list[0]])
 
 
-print(mask_account_card("Maestro 1596837868705199"))
+def get_date(date: str) -> str:
+    """
+    Возвращает дату из формата ГГГГ-ММ-ДД в ДД.ММ.ГГГГ
+    """
+    if len(date) <= 1:
+        return "Дата не может быть пустой"
+    year = date[:4]
+    month = date[5:7]
+    day = date[8:10]
+    new_date = day + "." + month + "." + year
+
+    try:
+        datetime.strptime(new_date, "%d.%m.%Y")
+        return new_date
+    except ValueError:
+        return date
+
+
+print(get_date("2024-03-11T02:26:18.671407"))

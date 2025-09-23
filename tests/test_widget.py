@@ -41,20 +41,21 @@ def test_mask_account_card_invalid_account_number_more() -> None:
     with pytest.raises(ValueError):
         mask_account_card("Счет 73654108430135874645216853")
 
-
 @pytest.mark.parametrize(
-    "date, expected",
+    "value, expected",
     [
-        ("2019-07-03T18:35:29.512364", "03.07.2019"),
-        ("2018-06-30T02:08:58.425572", "30.06.2018"),
-        ("2018-09-12T21:27:25.241689", "12.09.2018"),
-        ("2018-10-14T08:21:33.419441", "14.10.2018"),
+        ("2024-03-11T02:26:18.671407", "11.03.2024"),
+        ("2024/03/11", "11.03.2024"),
+        ("2024.03.11", "11.03.2024"),
     ],
 )
-def test_get_date(date: str, expected: str) -> None:
-    assert get_date(date) == expected
+def test_get_date(value: str, expected: str) -> None:
+    assert get_date(value) == expected
 
 
 def test_get_date_empty() -> None:
-    with pytest.raises(ValueError):
-        get_date("")
+    assert get_date("") == "Дата не может быть пустой"
+
+
+def test_get_date_wrong_format() -> None:
+    assert get_date("2024-Март-11") == "2024-Март-11"

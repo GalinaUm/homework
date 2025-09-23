@@ -1,8 +1,12 @@
-from src.processing import filter_by_state
+
+from pyexpat.errors import messages
+
+from src.processing import filter_by_state, sort_by_date
+from src.utils import process_bank_search
+from src.generators import filter_by_currency
 from src.read_file import read_transactions_csv, read_transactions_excel
 from src.utils import read_transactions
-
-
+from src.widget import get_date
 
 list_data_filepath = {1: "../data/operations.json",
                       2: "../data/transactions.csv",
@@ -26,6 +30,7 @@ def get_transaction_path() -> str:
             continue
 
 
+
 def get_transaction_data(file_path: str, file_type: str) -> list[dict]:
     if file_type == "json":
         return read_transactions(file_path)
@@ -34,6 +39,7 @@ def get_transaction_data(file_path: str, file_type: str) -> list[dict]:
     if file_type == "xlsx":
         return read_transactions_excel(file_path)
     return []
+
 
 def state_approve() -> str:
     """
@@ -52,6 +58,45 @@ def state_approve() -> str:
             print(f"Статус операции \"{user_choice}\" недоступен")
 
 
+def yes_or_not_approve(question:str) -> bool:
+    """
+    Функция для проверки корректности ответа на вопросы типа Да/Нет
+    """
+    messages = question
+    while True:
+        print(messages)
+        user_message = input()
+        if user_message.upper() == "ДА":
+            return True
+        if user_message.upper() == "НЕТ":
+            return False
+        else:
+            print(f"Ваш ответ \"{user_message}\" некорректен")
+
+def is_reverse()->bool:
+    """
+    Функция для проверки сортировки по убыванию или возрастанию
+    """
+    messages = "Отсортировать по возрастанию или по убыванию? Введите \"УБЫВ\" или \"ВОЗВРА\""
+    print(messages)
+    while True:
+        user_message = input()
+        if "УБЫВ" in user_message.upper():
+            return True
+        if "ВОЗВРА" in user_message.upper():
+            return False
+        else:
+            print(f"Ваш ответ \"{user_message}\" некорректен")
+            print("Введите по возрастанию/по убыванию")
+
+
+def response_layout(operation:dict):
+    """
+    Функция для компановки ответа
+    """
+    date = get_date(operation.get("date"))
+    description = operation.get("description")
+    print(f"{date} {description}")
 
 
 def main():
@@ -79,16 +124,22 @@ def main():
 
     data = filter_by_state(data, state)
 
+    if yes_or_not_approve("Отсортировать операции по дате? Да/Нет"):
+        revers_date = is_reverse()
+        data = sort_by_date(data, revers_date)
+    if yes_or_not_approve("Выводить только рублевые транзакции? Да/Нет"):
+        iterator_result = filter_by_currency(data, "RUB")
+        data = list(iterator_result)
+    if yes_or_not_approve("Отфильтровать список транзакций по определенному слову в описании? Да/Нет"):
+        print("Введите слово:")
+        user_input = input()
+        data = process_bank_search(data, user_input)
 
-
-
-
-
-
-
-
-
-
+    print("Распечатываю итоговый список транзакций...")
+    if len(data) > 0:
+        print(f"Всего банковских операций в выборке: {len(data)}")
+        for operation in data:
+            response_layout(operation)
 
 
 
@@ -98,65 +149,18 @@ print(main())
 
 
 
-# def choose_transaction_type():
-#     global data
-#     print("""
-#             Здравствуй, волшебник! Добро пожаловать в программу работы
-#             с банковскими транзакциями банка Гринготтс.
-#             Гоблины предлагают тебе выбрать необходимый пункт меню. Выбирай с умом,
-#             иначе будешь подвергнут заклятью Круциатуса!:
-#
-#             1. Получить информацию о транзакциях из JSON-файла
-#             2. Получить информацию о транзакциях из CSV-файла
-#             3. Получить информацию о транзакциях из XLSX-файла
-#             """)
-#     wizard_num = int(input('Акалай-махалай, выбираю: '))
-#
-#     if wizard_num == 1:
-#         data = read_transactions('data/operations.json')
-#     elif wizard_num == 2:
-#         data = read_transactions_csv('data/transactions.csv')
-#     elif wizard_num == 3:
-#         data = read_transactions_excel('data/transactions.xlsx')
-#     else:
-#         print('Ты че, Гарри Поттер? Авада кедавра!')
-#     return data, wizard_num
-#
-#
-#
-# def main(*args):
-#     """
-#     Основная функция программы.
-#     Выполняет последовательность загрузки данных, их очистки,
-#     фильтрации и вывода итогового списка транзакций.
-#     """
-#
-#     filtered_list = []
-#
-#     if args[0][1] == 1:
-#         print('''Для обработки выбран JSON-файл. Сейчас вам предстоит узнать что-то
-#                  o транзакциях Пожирателей смерти. Никому ничего не сообщайте, а то
-#                  Темный Лорд вас покарает!''')
-#         print('''Введите статус, по которому необходимо выполнить фильтрацию.
-#                  Доступные для фильтровки статусы: EXECUTED, CANCELED, PENDING''')
-#         status = input().lower()
-#         data_list = args[0]
-#
-#         for item in data_list:
-#             if data_list['state'].lower() == status:
-#                 filtered_list.append(item)
-#
-#     return filtered_list
 
 
 
 
 
 
-# if __name__ == '__main__':
-#     print(main(choose_number))
 
 
 
 
 
+
+
+
+main()
